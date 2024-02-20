@@ -38,6 +38,7 @@ class bedlevelvisualizer(
 		self.box = []
 		self.flip_x = False
 		self.flip_y = False
+		self.flip_z = False
 		self.timeout_override = False
 		self._logger = logging.getLogger(
 			"octoprint.plugins.bedlevelvisualizer")
@@ -410,6 +411,13 @@ class bedlevelvisualizer(
 			if bool(self.flip_y) != bool(self._settings.get(["flipY"])):
 				self.mesh.reverse()
 				self.print_mesh_debug("flipped y axis: ", self.mesh)
+
+			if bool(self.flip_z) != bool(self._settings.get(["flipZ"])):
+				self.mesh = list(map(
+					lambda ys: list(map(
+						lambda x: x[1:] if x[0] == "-" else "-" + x, ys
+					)), self.mesh))
+				self.print_mesh_debug("flipped z axis: ", self.mesh)
 
 			if self._settings.get_boolean(["use_relative_offsets"]):
 				self._bedlevelvisualizer_logger.debug("using relative offsets")
